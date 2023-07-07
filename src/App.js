@@ -1,23 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
 
+import { atom, useRecoilState, useResetRecoilState, selector, useRecoilValue } from'recoil';
+
+
+const globalState = atom({
+    key:"count-atom",
+    default:15
+})
+//atoms are used to create the global states
+
+
+//selectors are a piece of derived state
+const fontSize = selector({
+  key:"font-size",
+  get:({get})=>{
+    const count = get(globalState)
+    const fontSize = count * 4
+    return fontSize
+  }
+})
+
 function App() {
+  const [count,setCount] = useRecoilState(globalState) // accessing the global states
+  const resetCount = useResetRecoilState(globalState)
+  const fontSize1 = useRecoilValue(fontSize)
   return (
+
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Recoil State Management</h1>
+      <h4>The font size is: {count}</h4>
+
+      <h4>The font size of emoji is: </h4>
+
+     <p style={{fontSize:fontSize1}}>😊 </p>
+
+      <button onClick={()=>{ setCount(count+1) }}>Increase Count</button>
+      <button onClick={()=>{resetCount()}}>Reset Count</button>
+    
+      
+
+
     </div>
   );
 }
